@@ -53,6 +53,7 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
     @IBOutlet weak var customTimeStackView: NSStackView!
     
     let prefs = UserDefaults.standard
+    let statusMenuController = (NSApplication.shared.delegate as? AppDelegate)?.statusMenuController
     var setStatusToggle: (() -> Void)?
     var updateSchedule: (() -> Void)?
     var updateDarkMode: (() -> Void)?
@@ -97,13 +98,11 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
     }
     
     @IBAction func quickToggle(_ sender: NSButtonCell) {
-        let appDelegate = NSApplication.shared.delegate as! AppDelegate
-        appDelegate.setStatusToggle()
+        statusMenuController?.updateStatusMenuClickAction()
     }
     
     @IBAction func setIconSwitching(_ sender: Any) {
-        let appDelegate = NSApplication.shared.delegate as! AppDelegate
-        appDelegate.setMenuBarIcon()
+        statusMenuController?.updateStatusMenuIcon()
     }
     
     @IBAction func syncDarkMode(_ sender: NSButtonCell) {

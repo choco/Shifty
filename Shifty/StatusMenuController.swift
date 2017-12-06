@@ -12,7 +12,10 @@ import AXSwift
 
 let BLClient = CBBlueLightClient()
 let SSLocationManager = SunriseSetLocationManager()
-class StatusMenuController: NSObject, NSMenuDelegate {
+class StatusMenuController: NSWindowController, NSMenuDelegate {
+    override var windowNibName: NSNib.Name {
+        get { return NSNib.Name("StatusMenu") }
+    }
     
     @IBOutlet weak var statusMenu: NSMenu!
     @IBOutlet weak var powerMenuItem: NSMenuItem!
@@ -29,6 +32,8 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     @IBOutlet weak var sunIcon: NSImageView!
     @IBOutlet weak var moonIcon: NSImageView!
     
+    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+    let prefs = UserDefaults.standard
     var preferencesWindow: NSWindowController!
     var prefGeneral: PrefGeneralViewController!
     var prefShortcuts: PrefShortcutsViewController!
@@ -63,8 +68,53 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     let calendar = NSCalendar(identifier: .gregorian)!
     
     //MARK: Menu life cycle
+    func updateStatusMenuIcon() {
+        var icon: NSImage
+        if prefs.bool(forKey: Keys.isIconSwitchingEnabled) {
+            if !BLClient.isNightShiftEnabled {
+                icon = #imageLiteral(resourceName: "sunOpenIcon")
+            } else {
+                icon = #imageLiteral(resourceName: "shiftyMenuIcon")
+            }
+        } else {
+            icon = #imageLiteral(resourceName: "shiftyMenuIcon")
+        }
+        icon.isTemplate = true
+        DispatchQueue.main.async {
+            self.statusItem.button?.image = icon
+        }
+    }
+    
+    func updateStatusMenuClickAction() {
+        if prefs.bool(forKey: Keys.isStatusToggleEnabled) {
+            statusItem.menu = nil
+            if let button = statusItem.button {
+                button.action = #selector(self.statusBarButtonClicked(sender:))
+                button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+            }
+        } else {
+            statusItem.menu = statusMenu
+        }
+    }
+    
+    @objc func statusBarButtonClicked(sender: NSStatusBarButton) {
+        let event = NSApp.currentEvent!
         
-    override func awakeFromNib() {
+        if event.type == NSEvent.EventType.rightMouseUp || event.modifierFlags.contains(.control)  {
+            statusItem.menu = statusMenu
+            statusItem.popUpMenu(statusMenu)
+            statusItem.menu = nil
+        } else {
+            self.power(self)
+            self.sliderView.shiftSlider.floatValue = BLClient.strength * 100
+            Event.toggleNightShift(state: self.activeState).record()
+        }
+    }
+        
+    override func windowDidLoad() {
+        // Setup status item icon
+        updateStatusMenuIcon()
+        updateStatusMenuClickAction()
         statusMenu.delegate = self
         customTimeWindow = CustomTimeWindow()
         
@@ -123,13 +173,6 @@ class StatusMenuController: NSObject, NSMenuDelegate {
             browserRules = []
         }
 
-        let appDelegate = NSApplication.shared.delegate as! AppDelegate
-        appDelegate.statusItemClicked = {
-            self.power(self)
-            self.sliderView.shiftSlider.floatValue = BLClient.strength * 100
-            Event.toggleNightShift(state: self.activeState).record()
-        }
-        
         NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: nil) { _ in
             self.updateCurrentApp()
         }
@@ -324,9 +367,6 @@ class StatusMenuController: NSObject, NSMenuDelegate {
             self.prefGeneral.updateSchedule?()
         }
         self.updateDarkMode()
-        
-        let appDelegate = NSApplication.shared.delegate as! AppDelegate
-        appDelegate.setMenuBarIcon()
     }
     
     func updateDarkMode() {

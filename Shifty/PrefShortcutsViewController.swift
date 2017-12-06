@@ -12,7 +12,7 @@ import MASShortcut
 @objcMembers
 class PrefShortcutsViewController: NSViewController, MASPreferencesViewController {
     
-    let statusMenuController = (NSApplication.shared.delegate as? AppDelegate)?.statusMenu.delegate as? StatusMenuController
+    let statusMenuController = (NSApplication.shared.delegate as? AppDelegate)?.statusMenuController
     
     override var nibName: NSNib.Name {
         get { return NSNib.Name("PrefShortcutsViewController") }

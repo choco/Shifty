@@ -13,14 +13,11 @@ import Crashlytics
 import MASPreferences_Shifty
 import AXSwift
 
-@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     let prefs = UserDefaults.standard
-    @IBOutlet weak var statusMenu: NSMenu!
-    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     var accessibilityPromptWindow: AccessibilityPromptWindow!
-    var statusItemClicked: (() -> Void)?
+    var statusMenuController: StatusMenuController!
     
     lazy var preferenceWindowController: PrefWindowController = {
         return PrefWindowController(
@@ -32,10 +29,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }()
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        UserDefaults.standard.register(defaults: ["NSApplicationCrashOnExceptions": true])
+        prefs.register(defaults: ["NSApplicationCrashOnExceptions": true])
         Fabric.with([Crashlytics.self])
         Event.appLaunched.record()
-                
+        
+        // Check if macOS version > 10.12.4 which introduced Night Shift
         if !ProcessInfo().isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 10, minorVersion: 12, patchVersion: 4)) {
             Event.oldMacOSVersion(version: ProcessInfo().operatingSystemVersionString).record()
             let alert: NSAlert = NSAlert()
@@ -48,6 +46,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSApplication.shared.terminate(self)
         }
         
+        // Check if mac supports Night Shift
         if !CBBlueLightClient.supportsBlueLightReduction() {
             Event.unsupportedHardware.record()
             let alert: NSAlert = NSAlert()
@@ -60,20 +59,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSApplication.shared.terminate(self)
         }
         
+        // Check if Shifty was launched by ShiftyHelper, if so terminate the helper
         let launcherAppIdentifier = "io.natethompson.ShiftyHelper"
-        
-        var startedAtLogin = false
-        for app in NSWorkspace.shared.runningApplications {
-            if app.bundleIdentifier == launcherAppIdentifier {
-                startedAtLogin = true
-            }
-        }
-        
+        let runningApps = NSWorkspace.shared.runningApplications
+        let startedAtLogin = !runningApps.filter { $0.bundleIdentifier == launcherAppIdentifier }.isEmpty
         if startedAtLogin {
-            DistributedNotificationCenter.default().post(name: Notification.Name("killme"), object: Bundle.main.bundleIdentifier!)
+            DistributedNotificationCenter.default().post(name: Notification.Name("killme"),
+                                                         object: Bundle.main.bundleIdentifier!)
         }
-        
-        //Show accessibility permission prompt on third app launch
+
+        // Show accessibility permission prompt on third app launch
         let count = UserDefaults.standard.integer(forKey: Keys.appLaunchCount)
         UserDefaults.standard.set(count + 1, forKey: Keys.appLaunchCount)
         if count == 2 && !UIElement.isProcessTrusted(withPrompt: false) {
@@ -81,56 +76,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             accessibilityPromptWindow = AccessibilityPromptWindow()
             accessibilityPromptWindow.showWindow(nil)
         }
-    
-        setMenuBarIcon()
-        setStatusToggle()
-    }
-    
-    func setMenuBarIcon() {
-        var icon: NSImage
-        if UserDefaults.standard.bool(forKey: Keys.isIconSwitchingEnabled) {
-            if !BLClient.isNightShiftEnabled {
-                icon = #imageLiteral(resourceName: "sunOpenIcon")
-            } else {
-                icon = #imageLiteral(resourceName: "shiftyMenuIcon")
-            }
-        } else {
-            icon = #imageLiteral(resourceName: "shiftyMenuIcon")
-        }
-        icon.isTemplate = true
-        DispatchQueue.main.async {
-            self.statusItem.button?.image = icon
-        }
-    }
-    
-    func setStatusToggle() {
-        if prefs.bool(forKey: Keys.isStatusToggleEnabled) {
-            statusItem.menu = nil
-            if let button = statusItem.button {
-                button.action = #selector(self.statusBarButtonClicked(sender:))
-                button.sendAction(on: [.leftMouseUp, .rightMouseUp])
-            }
-        } else {
-            statusItem.menu = statusMenu
-        }
-    }
-    
-    @objc func statusBarButtonClicked(sender: NSStatusBarButton) {
-        let event = NSApp.currentEvent!
         
-        if event.type == NSEvent.EventType.rightMouseUp || event.modifierFlags.contains(.control)  {
-            statusItem.menu = statusMenu
-            statusItem.popUpMenu(statusMenu)
-            statusItem.menu = nil
-        } else {
-            statusItemClicked?()
-        }
+        // Setup statusMenuController
+        statusMenuController = StatusMenuController()
+        statusMenuController.showWindow(self)
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
-
-
 }
 
