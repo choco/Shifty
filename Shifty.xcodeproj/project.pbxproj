@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3B342D441FCCA68900DEDECF /* BrowserRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B342D431FCCA68900DEDECF /* BrowserRule.swift */; };
+		3B41F12C1FD88C40008D65CB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41F12B1FD88C40008D65CB /* main.swift */; };
 		43087E191F41EE0700A54523 /* BLNotificationBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 43087E181F41EE0700A54523 /* BLNotificationBlock.m */; };
 		43111A7C1FB84BC8000D8214 /* credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 43111A7B1FB84BC8000D8214 /* credits.rtf */; };
 		433AD3011F2CED1F0003FBCD /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 433AD3001F2CED1F0003FBCD /* dsa_pub.pem */; };
@@ -39,7 +40,7 @@
 		43D5C21E1FC2CACA00AF88E0 /* PrefAboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 43D5C2201FC2CACA00AF88E0 /* PrefAboutViewController.xib */; };
 		43D5C2211FC2CACF00AF88E0 /* CustomTimeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 43D5C2231FC2CACF00AF88E0 /* CustomTimeWindow.xib */; };
 		43D5C2301FC2CECC00AF88E0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 43D5C2321FC2CECC00AF88E0 /* Localizable.strings */; };
-		43D5C2391FC35FB500AF88E0 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 43D5C2381FC35FB500AF88E0 /* MainMenu.xib */; };
+		43D5C2391FC35FB500AF88E0 /* StatusMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 43D5C2381FC35FB500AF88E0 /* StatusMenu.xib */; };
 		4989C89C1F81611000FF83DB /* SkyLight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4989C89B1F81611000FF83DB /* SkyLight.framework */; };
 		4F2D868847D02BDBA9BA9A90 /* Pods_ShiftyHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F271F97E9F31A99983CEA240 /* Pods_ShiftyHelper.framework */; };
 		7D6801183F204BA285C9D5B7 /* Pods_Shifty.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 932D0C1C5887BEB67BDBBFD0 /* Pods_Shifty.framework */; };
@@ -61,6 +62,7 @@
 /* Begin PBXFileReference section */
 		115BB8A6F00EEB28DD8A96E5 /* Pods-Shifty.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shifty.release.xcconfig"; path = "Pods/Target Support Files/Pods-Shifty/Pods-Shifty.release.xcconfig"; sourceTree = "<group>"; };
 		3B342D431FCCA68900DEDECF /* BrowserRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrowserRule.swift; path = Shifty/BrowserRule.swift; sourceTree = "<group>"; };
+		3B41F12B1FD88C40008D65CB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = main.swift; path = Shifty/main.swift; sourceTree = "<group>"; };
 		43087E171F41EE0700A54523 /* BLNotificationBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BLNotificationBlock.h; path = Shifty/BLNotificationBlock.h; sourceTree = "<group>"; };
 		43087E181F41EE0700A54523 /* BLNotificationBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BLNotificationBlock.m; path = Shifty/BLNotificationBlock.m; sourceTree = "<group>"; };
 		43099BA81FC67B5000A0720B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/CustomTimeWindow.strings"; sourceTree = "<group>"; };
@@ -108,7 +110,7 @@
 		43D5C21F1FC2CACA00AF88E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefAboutViewController.xib; sourceTree = "<group>"; };
 		43D5C2221FC2CACF00AF88E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/CustomTimeWindow.xib; sourceTree = "<group>"; };
 		43D5C2311FC2CECC00AF88E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		43D5C2381FC35FB500AF88E0 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainMenu.xib; path = Shifty/MainMenu.xib; sourceTree = "<group>"; };
+		43D5C2381FC35FB500AF88E0 /* StatusMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = StatusMenu.xib; path = Shifty/StatusMenu.xib; sourceTree = "<group>"; };
 		43D5C2441FC3A9A100AF88E0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Shifty/Info.plist; sourceTree = "<group>"; };
 		4989C89B1F81611000FF83DB /* SkyLight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SkyLight.framework; path = ../../../../System/Library/PrivateFrameworks/SkyLight.framework; sourceTree = "<group>"; };
 		8C6209F5BF9CCE799389DE98 /* Pods-ShiftyHelper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShiftyHelper.release.xcconfig"; path = "Pods/Target Support Files/Pods-ShiftyHelper/Pods-ShiftyHelper.release.xcconfig"; sourceTree = "<group>"; };
@@ -193,11 +195,12 @@
 				4394DDA21EBE376F00F22908 /* AppDelegate.swift */,
 				4394DDA81EBE376F00F22908 /* StatusMenuController.swift */,
 				437D7E151EC015CB00544FC8 /* SliderView.swift */,
-				43D5C2381FC35FB500AF88E0 /* MainMenu.xib */,
+				43D5C2381FC35FB500AF88E0 /* StatusMenu.xib */,
 				4350191C1F21E99F0001324F /* CustomTimeWindow.swift */,
 				43D5C2231FC2CACF00AF88E0 /* CustomTimeWindow.xib */,
 				437D3A3F1FD7314000303AFE /* AccessibilityPromptWindow.swift */,
 				437D3A441FD7314700303AFE /* AccessibilityPromptWindow.xib */,
+				3B41F12B1FD88C40008D65CB /* main.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -327,9 +330,9 @@
 				TargetAttributes = {
 					43C7A4841F19F2CB00A697C0 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = 3Q7XKEDZ36;
+						DevelopmentTeam = VJ8592T25A;
 						LastSwiftMigration = 0900;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 0;
@@ -338,9 +341,9 @@
 					};
 					43CC9E421EBAB19300983528 = {
 						CreatedOnToolsVersion = 8.3.1;
-						DevelopmentTeam = 3Q7XKEDZ36;
+						DevelopmentTeam = VJ8592T25A;
 						LastSwiftMigration = 0900;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 0;
@@ -390,7 +393,7 @@
 				43D5C21E1FC2CACA00AF88E0 /* PrefAboutViewController.xib in Resources */,
 				43D5C2211FC2CACF00AF88E0 /* CustomTimeWindow.xib in Resources */,
 				43D5C21B1FC2CAC300AF88E0 /* PrefShortcutsViewController.xib in Resources */,
-				43D5C2391FC35FB500AF88E0 /* MainMenu.xib in Resources */,
+				43D5C2391FC35FB500AF88E0 /* StatusMenu.xib in Resources */,
 				43965AC31FC68A19001A076D /* InfoPlist.strings in Resources */,
 				437D3A421FD7314700303AFE /* AccessibilityPromptWindow.xib in Resources */,
 			);
@@ -546,6 +549,7 @@
 				4394DDAD1EBE376F00F22908 /* StatusMenuController.swift in Sources */,
 				43B9DE1B1FB592AE002C4C29 /* PrefAboutViewController.swift in Sources */,
 				4388E8E51F84ACCF00DC34CC /* SunriseSetLocationManager.swift in Sources */,
+				3B41F12C1FD88C40008D65CB /* main.swift in Sources */,
 				4350191D1F21E99F0001324F /* CustomTimeWindow.swift in Sources */,
 				43B9DE151FB5924F002C4C29 /* PrefShortcutsViewController.swift in Sources */,
 				3B342D441FCCA68900DEDECF /* BrowserRule.swift in Sources */,
@@ -636,9 +640,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ShiftyHelper/ShiftyHelper.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 3Q7XKEDZ36;
+				DEVELOPMENT_TEAM = VJ8592T25A;
 				INFOPLIST_FILE = ShiftyHelper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.natethompson.ShiftyHelper;
@@ -655,9 +660,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ShiftyHelper/ShiftyHelper.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 3Q7XKEDZ36;
+				DEVELOPMENT_TEAM = VJ8592T25A;
 				INFOPLIST_FILE = ShiftyHelper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.natethompson.ShiftyHelper;
@@ -780,11 +786,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Shifty/Shifty.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 3Q7XKEDZ36;
+				DEVELOPMENT_TEAM = VJ8592T25A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
@@ -808,10 +814,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Shifty/Shifty.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 3Q7XKEDZ36;
+				DEVELOPMENT_TEAM = VJ8592T25A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",

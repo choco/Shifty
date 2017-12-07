@@ -10,8 +10,6 @@ import Cocoa
 import MASShortcut
 import AXSwift
 
-let BLClient = CBBlueLightClient()
-let SSLocationManager = SunriseSetLocationManager()
 class StatusMenuController: NSWindowController, NSMenuDelegate {
     override var windowNibName: NSNib.Name {
         get { return NSNib.Name("StatusMenu") }
@@ -33,10 +31,6 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
     @IBOutlet weak var moonIcon: NSImageView!
     
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-    let prefs = UserDefaults.standard
-    var preferencesWindow: NSWindowController!
-    var prefGeneral: PrefGeneralViewController!
-    var prefShortcuts: PrefShortcutsViewController!
     var customTimeWindow: CustomTimeWindow!
     var currentAppName = ""
     var currentAppBundleId = ""
@@ -70,7 +64,7 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
     //MARK: Menu life cycle
     func updateStatusMenuIcon() {
         var icon: NSImage
-        if prefs.bool(forKey: Keys.isIconSwitchingEnabled) {
+        if Prefs.userDefaults.bool(forKey: Keys.isIconSwitchingEnabled) {
             if !BLClient.isNightShiftEnabled {
                 icon = #imageLiteral(resourceName: "sunOpenIcon")
             } else {
@@ -86,11 +80,12 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
     }
     
     func updateStatusMenuClickAction() {
-        if prefs.bool(forKey: Keys.isStatusToggleEnabled) {
+        if Prefs.userDefaults.bool(forKey: Keys.isStatusToggleEnabled) {
             statusItem.menu = nil
             if let button = statusItem.button {
                 button.action = #selector(self.statusBarButtonClicked(sender:))
                 button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+                button.target = self
             }
         } else {
             statusItem.menu = statusMenu
@@ -99,7 +94,7 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
     
     @objc func statusBarButtonClicked(sender: NSStatusBarButton) {
         let event = NSApp.currentEvent!
-        
+
         if event.type == NSEvent.EventType.rightMouseUp || event.modifierFlags.contains(.control)  {
             statusItem.menu = statusMenu
             statusItem.popUpMenu(statusMenu)
@@ -110,6 +105,59 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
             Event.toggleNightShift(state: self.activeState).record()
         }
     }
+    
+    func bindShortcuts() {
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.toggleNightShiftShortcut) {
+            self.power(self)
+        }
+        
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.incrementColorTempShortcut) {
+            if BLClient.isNightShiftEnabled {
+                if BLClient.strength == 1.0 {
+                    NSSound.beep()
+                }
+                BLClient.setStrength(BLClient.strength + 0.1, commit: true)
+            } else {
+                BLClient.setEnabled(true)
+                BLClient.setStrength(0.1, commit: true)
+                self.disableDisableTimer()
+                if self.isDisabledForApp {
+                    NSSound.beep()
+                }
+            }
+        }
+        
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.decrementColorTempShortcut) {
+            if BLClient.isNightShiftEnabled {
+                BLClient.setStrength(BLClient.strength - 0.1, commit: true)
+                if BLClient.strength == 0.0 {
+                    BLClient.setEnabled(false)
+                }
+            } else {
+                NSSound.beep()
+            }
+        }
+        
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.disableAppShortcut) {
+            self.disableForApp(self)
+        }
+        
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.disableHourShortcut) {
+            if BLClient.isNightShiftEnabled || (self.isDisableHourSelected) {
+                self.disableHour(self)
+            } else {
+                NSSound.beep()
+            }
+        }
+        
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.disableCustomShortcut) {
+            if BLClient.isNightShiftEnabled || (self.isDisableCustomSelected) {
+                self.disableCustomTime(self)
+            } else {
+                NSSound.beep()
+            }
+        }
+    }
         
     override func windowDidLoad() {
         // Setup status item icon
@@ -117,14 +165,6 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
         updateStatusMenuClickAction()
         statusMenu.delegate = self
         customTimeWindow = CustomTimeWindow()
-        
-        let prefWindow = (NSApplication.shared.delegate as? AppDelegate)?.preferenceWindowController
-        prefGeneral = prefWindow?.viewControllers.flatMap { childViewController in
-            return childViewController as? PrefGeneralViewController
-        }.first
-        prefShortcuts = prefWindow?.viewControllers.flatMap { childViewController in
-            return childViewController as? PrefShortcutsViewController
-        }.first
         
         descriptionMenuItem.isEnabled = false
         sliderMenuItem.view = sliderView
@@ -160,8 +200,8 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
         
         isShiftForAppEnabled = BLClient.isNightShiftEnabled
 
-        disabledApps = PrefManager.sharedInstance.userDefaults.value(forKey: Keys.disabledApps) as? [String] ?? []
-        if let data = PrefManager.sharedInstance.userDefaults.value(forKey: Keys.browserRules) as? Data {
+        disabledApps = Prefs.userDefaults.value(forKey: Keys.disabledApps) as? [String] ?? []
+        if let data = Prefs.userDefaults.value(forKey: Keys.browserRules) as? Data {
             do {
                 browserRules = try PropertyListDecoder().decode(Array<BrowserRule>.self, from: data)
             }
@@ -181,35 +221,32 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
             self.setToSchedule()
             self.updateDarkMode()
         }
-        
-        BLClient.setStatusNotificationBlock(BLNotificationBlock)
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name("nightShiftToggled"), object: nil, queue: nil) { _ in
             self.blueLightNotification()
         }
-        
-        
+
         DistributedNotificationCenter.default().addObserver(forName: NSNotification.Name("com.apple.accessibility.api"), object: nil, queue: nil) { _ in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                 if UIElement.isProcessTrusted(withPrompt: false) {
-                    UserDefaults.standard.set(true, forKey: Keys.isWebsiteControlEnabled)
+                    Prefs.userDefaults.set(true, forKey: Keys.isWebsiteControlEnabled)
                 } else {
-                    UserDefaults.standard.set(false, forKey: Keys.isWebsiteControlEnabled)
+                    Prefs.userDefaults.set(false, forKey: Keys.isWebsiteControlEnabled)
                 }
             })
         }
         
-        prefGeneral.updateDarkMode = {
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(Keys.isDarkModeSyncEnabled), object: nil, queue: nil) { _ in
             self.updateDarkMode()
         }
-        
-        prefShortcuts.bindShortcuts()
+
+        bindShortcuts()
         
         SSLocationManager.setup()
         SSLocationManager.updateLocationMonitoringStatus()
         
     }
-    
+
     func menuWillOpen(_: NSMenu) {
         if BLClient.isNightShiftEnabled {
             setActiveState(state: true)
@@ -231,7 +268,7 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
         Event.menuOpened.record()
         
         //refresh location if not updated in over a day
-        if let data = UserDefaults.standard.value(forKey: Keys.lastKnownLocation) as? Data,
+        if let data = Prefs.userDefaults.value(forKey: Keys.lastKnownLocation) as? Data,
             let location = try? PropertyListDecoder().decode(Location.self, from: data) {
             
             if location.date < Date.init(timeIntervalSinceNow: -86400) {
@@ -243,7 +280,7 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
     }
     
     func assignKeyboardShortcutToMenuItem(_ menuItem: NSMenuItem, userDefaultsKey: String) {
-        if let data = UserDefaults.standard.value(forKey: userDefaultsKey),
+        if let data = Prefs.userDefaults.value(forKey: userDefaultsKey),
             let shortcut = NSKeyedUnarchiver.unarchiveObject(with: data as! Data) as? MASShortcut {
             let flags = NSEvent.ModifierFlags.init(rawValue: shortcut.modifierFlags)
             menuItem.keyEquivalentModifierMask = flags
@@ -363,14 +400,11 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
             }
         }
         
-        DispatchQueue.main.async {
-            self.prefGeneral.updateSchedule?()
-        }
         self.updateDarkMode()
     }
     
     func updateDarkMode() {
-        if UserDefaults.standard.bool(forKey: Keys.isDarkModeSyncEnabled) {
+        if Prefs.userDefaults.bool(forKey: Keys.isDarkModeSyncEnabled) {
             switch BLClient.schedule {
             case .off:
                 SLSSetAppearanceThemeLegacy(isShiftForAppEnabled)
@@ -426,7 +460,7 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
             disabledApps.remove(at: disabledApps.index(of: currentAppBundleId)!)
         }
         updateCurrentApp()
-        PrefManager.sharedInstance.userDefaults.set(disabledApps, forKey: Keys.disabledApps)
+        Prefs.userDefaults.set(disabledApps, forKey: Keys.disabledApps)
         Event.disableForCurrentApp(state: (sender as? NSMenuItem)?.state == .on).record()
     }
     
@@ -442,7 +476,7 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
             browserRules.remove(at: browserRules.index(of: subdomain_rule)!)
         }
         updateCurrentApp()
-        PrefManager.sharedInstance.userDefaults.set(try? PropertyListEncoder().encode(browserRules), forKey: Keys.browserRules)
+        Prefs.userDefaults.set(try? PropertyListEncoder().encode(browserRules), forKey: Keys.browserRules)
     }
 
     @IBAction func disableForSubdomain(_ sender: Any) {
@@ -457,7 +491,7 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
             browserRules.remove(at: ruleIndex)
         }
         updateCurrentApp()
-        PrefManager.sharedInstance.userDefaults.set(try? PropertyListEncoder().encode(browserRules), forKey: Keys.browserRules)
+        Prefs.userDefaults.set(try? PropertyListEncoder().encode(browserRules), forKey: Keys.browserRules)
     }
     
     @IBAction func disableHour(_ sender: Any) {
@@ -578,7 +612,7 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
         isDisabledForSubdomain = false
         isExceptionForSubdomain = false
         
-        if UserDefaults.standard.bool(forKey: Keys.isWebsiteControlEnabled) {
+        if Prefs.userDefaults.bool(forKey: Keys.isWebsiteControlEnabled) {
             if let supportedBrowser = SupportedBrowser(rawValue: currentAppBundleId) {
                 if let pid = NSWorkspace.shared.menuBarOwningApplication?.processIdentifier {
                     do {
@@ -631,7 +665,7 @@ class StatusMenuController: NSWindowController, NSMenuDelegate {
         if currentDomain == currentSubdomain || currentSubdomain == "www.\(currentDomain)" {
             currentSubdomain = ""
         }
-        if UserDefaults.standard.bool(forKey: Keys.isWebsiteControlEnabled) {
+        if Prefs.userDefaults.bool(forKey: Keys.isWebsiteControlEnabled) {
             disableDomainMenuItem.isHidden = currentDomain.isEmpty
             disableSubdomainMenuItem.isHidden = currentSubdomain.isEmpty
         } else {

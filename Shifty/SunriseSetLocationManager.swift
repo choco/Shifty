@@ -11,6 +11,7 @@ import CoreLocation
 class SunriseSetLocationManager: NSObject, CLLocationManagerDelegate {
     
     var locationManager = CLLocationManager()
+    let BLClient = CBBlueLightClient.shared
     var shouldShowAlert = true
     
     var latitude: CLLocationDegrees?
@@ -24,7 +25,7 @@ class SunriseSetLocationManager: NSObject, CLLocationManagerDelegate {
         if let latitude = latitude, let longitude = longitude {
             return getSunriseSetTimes(timeZone: NSTimeZone.system, latitude: latitude, longitude: longitude)
         } else {
-            if let data = UserDefaults.standard.value(forKey: Keys.lastKnownLocation) as? Data {
+            if let data = Prefs.userDefaults.value(forKey: Keys.lastKnownLocation) as? Data {
                 if let lastKnownLocation = try? PropertyListDecoder().decode(Location.self, from: data) {
                     return getSunriseSetTimes(timeZone: NSTimeZone.system, latitude: lastKnownLocation.latitude, longitude: lastKnownLocation.longitude)
                 } else {
@@ -57,7 +58,7 @@ class SunriseSetLocationManager: NSObject, CLLocationManagerDelegate {
         print(lastLocation)
         if let latitude = latitude, let longitude = longitude {
             let lastKnownLocation = Location(latitude: latitude, longitude: longitude, saveDate: Date())
-            UserDefaults.standard.set(try? PropertyListEncoder().encode(lastKnownLocation), forKey: Keys.lastKnownLocation)
+            Prefs.userDefaults.set(try? PropertyListEncoder().encode(lastKnownLocation), forKey: Keys.lastKnownLocation)
         }
     }
 
@@ -118,7 +119,7 @@ class SunriseSetLocationManager: NSObject, CLLocationManagerDelegate {
                 NSWorkspace.shared.open(privacyPrefs!)
                 self.shouldShowAlert = true
             } else {
-                BLClient.setSchedule(.off)
+                self.BLClient.setSchedule(.off)
                 self.shouldShowAlert = true
             }
             Event.locationServicesDeniedAlertShown.record()
@@ -143,7 +144,7 @@ class SunriseSetLocationManager: NSObject, CLLocationManagerDelegate {
                 }
                 self.shouldShowAlert = true
             } else {
-                BLClient.setSchedule(.off)
+                self.BLClient.setSchedule(.off)
                 self.shouldShowAlert = true
             }
             Event.locationErrorAlertShown.record()
@@ -164,7 +165,7 @@ class SunriseSetLocationManager: NSObject, CLLocationManagerDelegate {
                 let latitude = location.lat
                 let longitude = location.lon
                 let lastKnownLocation = Location(latitude: latitude, longitude: longitude, saveDate: Date())
-                UserDefaults.standard.set(try? PropertyListEncoder().encode(lastKnownLocation), forKey: Keys.lastKnownLocation)
+                Prefs.userDefaults.set(try? PropertyListEncoder().encode(lastKnownLocation), forKey: Keys.lastKnownLocation)
             } else {
                 self.showLocationErrorAlert()
             }

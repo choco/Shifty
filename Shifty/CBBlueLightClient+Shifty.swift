@@ -15,7 +15,13 @@ enum ScheduleType {
 }
 
 extension CBBlueLightClient {
+    static let shared = CBBlueLightClient(notificationBlock: BLNotificationBlock)
     
+    private convenience init(notificationBlock: (@convention(block) () -> Void)) {
+        self.init()
+        setStatusNotificationBlock(notificationBlock)
+    }
+
     var blueLightStatus: StatusData {
         var statusData: StatusData = StatusData()
         getBlueLightStatus(&statusData)

@@ -11,9 +11,6 @@ import MASShortcut
 
 @objcMembers
 class PrefShortcutsViewController: NSViewController, MASPreferencesViewController {
-    
-    let statusMenuController = (NSApplication.shared.delegate as? AppDelegate)?.statusMenuController
-    
     override var nibName: NSNib.Name {
         get { return NSNib.Name("PrefShortcutsViewController") }
     }
@@ -54,58 +51,5 @@ class PrefShortcutsViewController: NSViewController, MASPreferencesViewControlle
     
     override func viewWillDisappear() {
         Event.shortcuts(toggleNightShift: toggleNightShiftShortcut.shortcutValue != nil, increaseColorTemp: incrementColorTempShortcut.shortcutValue != nil, decreaseColorTemp: decrementColorTempShortcut.shortcutValue != nil, disableApp: disableAppShortcut.shortcutValue != nil, disableHour: disableHourShortcut.shortcutValue != nil, disableCustom: disableCustomShortcut.shortcutValue != nil).record()
-    }
-    
-    func bindShortcuts() {
-        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.toggleNightShiftShortcut) {
-            self.statusMenuController?.power(self)
-        }
-        
-        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.incrementColorTempShortcut) {
-            if BLClient.isNightShiftEnabled {
-                if BLClient.strength == 1.0 {
-                    NSSound.beep()
-                }
-                BLClient.setStrength(BLClient.strength + 0.1, commit: true)
-            } else {
-                BLClient.setEnabled(true)
-                BLClient.setStrength(0.1, commit: true)
-                self.statusMenuController?.disableDisableTimer()
-                if self.statusMenuController?.isDisabledForApp ?? false {
-                    NSSound.beep()
-                }
-            }
-        }
-        
-        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.decrementColorTempShortcut) {
-            if BLClient.isNightShiftEnabled {
-                BLClient.setStrength(BLClient.strength - 0.1, commit: true)
-                if BLClient.strength == 0.0 {
-                    BLClient.setEnabled(false)
-                }
-            } else {
-                NSSound.beep()
-            }
-        }
-        
-        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.disableAppShortcut) {
-            self.statusMenuController?.disableForApp(self)
-        }
-        
-        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.disableHourShortcut) {
-            if BLClient.isNightShiftEnabled || (self.statusMenuController?.isDisableHourSelected) ?? false {
-                self.statusMenuController?.disableHour(self)
-            } else {
-                NSSound.beep()
-            }
-        }
-        
-        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: Keys.disableCustomShortcut) {
-            if BLClient.isNightShiftEnabled || (self.statusMenuController?.isDisableCustomSelected) ?? false {
-                self.statusMenuController?.disableCustomTime(self)
-            } else {
-                NSSound.beep()
-            }
-        }
     }
 }

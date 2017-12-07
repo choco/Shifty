@@ -52,12 +52,8 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
     @IBOutlet weak var toLabel: NSTextField!
     @IBOutlet weak var customTimeStackView: NSStackView!
     
-    let prefs = UserDefaults.standard
     let statusMenuController = (NSApplication.shared.delegate as? AppDelegate)?.statusMenuController
-    var setStatusToggle: (() -> Void)?
-    var updateSchedule: (() -> Void)?
-    var updateDarkMode: (() -> Void)?
-    
+
     var appDelegate: AppDelegate!
     var prefWindow: NSWindow!
     
@@ -67,27 +63,32 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
         appDelegate = NSApplication.shared.delegate as! AppDelegate
         prefWindow = appDelegate.preferenceWindowController.window
         
-        updateSchedule = {
-            switch BLClient.schedule {
-            case .off:
-                self.schedulePopup.select(self.offMenuItem)
-                self.setCustomControlVisibility(false, animate: true)
-            case .timedSchedule(startTime: let startTime, endTime: let endTime):
-                self.schedulePopup.select(self.customMenuItem)
-                self.fromTimePicker.dateValue = startTime
-                self.toTimePicker.dateValue = endTime
-                self.setCustomControlVisibility(true, animate: true)
-            case .sunSchedule:
-                self.schedulePopup.select(self.sunMenuItem)
-                self.setCustomControlVisibility(false, animate: true)
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("nightShiftToggled"), object: nil, queue: nil) { _ in
+            DispatchQueue.main.async {
+                self.updateSchedule()
             }
+        }
+    }
+    
+    func updateSchedule() {
+        switch BLClient.schedule {
+        case .off:
+            self.schedulePopup.select(self.offMenuItem)
+            self.setCustomControlVisibility(false, animate: true)
+        case .timedSchedule(startTime: let startTime, endTime: let endTime):
+            self.schedulePopup.select(self.customMenuItem)
+            self.fromTimePicker.dateValue = startTime
+            self.toTimePicker.dateValue = endTime
+            self.setCustomControlVisibility(true, animate: true)
+        case .sunSchedule:
+            self.schedulePopup.select(self.sunMenuItem)
+            self.setCustomControlVisibility(false, animate: true)
         }
     }
     
     override func viewWillAppear() {
         super.viewWillAppear()
-        
-        updateSchedule?()
+        updateSchedule()
     }
 
     //MARK: IBActions
@@ -107,7 +108,7 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
     
     @IBAction func syncDarkMode(_ sender: NSButtonCell) {
         if sender.state == .on {
-            updateDarkMode!()
+            NotificationCenter.default.post(name: NSNotification.Name(Keys.isDarkModeSyncEnabled), object: nil)
         } else {
             SLSSetAppearanceThemeLegacy(false)
         }
@@ -116,7 +117,7 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
     @IBAction func setWebsiteControl(_ sender: NSButtonCell) {
         if sender.state == .on {
             if !UIElement.isProcessTrusted(withPrompt: false) {
-                UserDefaults.standard.set(false, forKey: Keys.isWebsiteControlEnabled)
+                Prefs.userDefaults.set(false, forKey: Keys.isWebsiteControlEnabled)
                 let alert: NSAlert = NSAlert()
                 alert.messageText = NSLocalizedString("alert.accessibility_message", comment: "This feature requires accessibility permissions.")
                 alert.informativeText = NSLocalizedString("alert.accessibility_informative", comment: "Grant access to Shifty in Security & Privacy preferences, located in System Preferences.")
@@ -186,7 +187,8 @@ class PrefGeneralViewController: NSViewController, MASPreferencesViewController 
 }
 
 
-class PrefWindowController: MASPreferencesWindowController {    
+class PrefWindowController: MASPreferencesWindowController {
+
     override func keyDown(with theEvent: NSEvent) {
         if theEvent.keyCode == 13 {
             window?.close()

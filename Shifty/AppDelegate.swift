@@ -13,9 +13,12 @@ import Crashlytics
 import MASPreferences_Shifty
 import AXSwift
 
+let BLClient = CBBlueLightClient.shared
+let Prefs = PrefManager.sharedInstance
+let SSLocationManager = SunriseSetLocationManager()
+
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    let prefs = UserDefaults.standard
     var accessibilityPromptWindow: AccessibilityPromptWindow!
     var statusMenuController: StatusMenuController!
     
@@ -29,7 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }()
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        prefs.register(defaults: ["NSApplicationCrashOnExceptions": true])
+        Prefs.userDefaults.register(defaults: ["NSApplicationCrashOnExceptions": true])
         Fabric.with([Crashlytics.self])
         Event.appLaunched.record()
         
@@ -69,8 +72,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         // Show accessibility permission prompt on third app launch
-        let count = UserDefaults.standard.integer(forKey: Keys.appLaunchCount)
-        UserDefaults.standard.set(count + 1, forKey: Keys.appLaunchCount)
+        let count = Prefs.userDefaults.integer(forKey: Keys.appLaunchCount)
+        Prefs.userDefaults.set(count + 1, forKey: Keys.appLaunchCount)
         if count == 2 && !UIElement.isProcessTrusted(withPrompt: false) {
             NSApplication.shared.activate(ignoringOtherApps: true)
             accessibilityPromptWindow = AccessibilityPromptWindow()
