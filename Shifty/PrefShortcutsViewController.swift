@@ -40,7 +40,7 @@ class PrefShortcutsViewController: NSViewController, MASPreferencesViewControlle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         toggleNightShiftShortcut.associatedUserDefaultsKey = Keys.toggleNightShiftShortcut
         incrementColorTempShortcut.associatedUserDefaultsKey = Keys.incrementColorTempShortcut
         decrementColorTempShortcut.associatedUserDefaultsKey = Keys.decrementColorTempShortcut

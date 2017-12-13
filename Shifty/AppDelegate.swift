@@ -12,10 +12,12 @@ import Fabric
 import Crashlytics
 import MASPreferences_Shifty
 import AXSwift
+import ReSwift
 
 let BLClient = CBBlueLightClient.shared
 let Prefs = PrefManager.sharedInstance
 let SSLocationManager = SunriseSetLocationManager()
+let store = Store<ShiftyState>(reducer: appReducer, state: nil)
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -34,6 +36,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         Prefs.userDefaults.register(defaults: ["NSApplicationCrashOnExceptions": true])
         Fabric.with([Crashlytics.self])
+        
+        
         Event.appLaunched.record()
         
         // Check if macOS version > 10.12.4 which introduced Night Shift

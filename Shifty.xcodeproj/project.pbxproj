@@ -9,6 +9,14 @@
 /* Begin PBXBuildFile section */
 		3B342D441FCCA68900DEDECF /* BrowserRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B342D431FCCA68900DEDECF /* BrowserRule.swift */; };
 		3B41F12C1FD88C40008D65CB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41F12B1FD88C40008D65CB /* main.swift */; };
+		3B4873E71FDD971B007ABD88 /* ShiftyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4873E61FDD971B007ABD88 /* ShiftyState.swift */; };
+		3B4873E91FDDA02E007ABD88 /* ShiftyPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4873E81FDDA02E007ABD88 /* ShiftyPreferences.swift */; };
+		3B4873EC1FDDA320007ABD88 /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4873EB1FDDA320007ABD88 /* Rule.swift */; };
+		3B4873EF1FDDB601007ABD88 /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4873EE1FDDB601007ABD88 /* AppReducer.swift */; };
+		3B4873F11FDDB728007ABD88 /* PreferencesReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4873F01FDDB728007ABD88 /* PreferencesReducer.swift */; };
+		3B4873F31FDDB741007ABD88 /* RulesReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4873F21FDDB741007ABD88 /* RulesReducer.swift */; };
+		3B4873F51FDDB755007ABD88 /* LocationReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4873F41FDDB755007ABD88 /* LocationReducer.swift */; };
+		3B4873F71FDDB76C007ABD88 /* InfoReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4873F61FDDB76C007ABD88 /* InfoReducer.swift */; };
 		43087E191F41EE0700A54523 /* BLNotificationBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 43087E181F41EE0700A54523 /* BLNotificationBlock.m */; };
 		43111A7C1FB84BC8000D8214 /* credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 43111A7B1FB84BC8000D8214 /* credits.rtf */; };
 		433AD3011F2CED1F0003FBCD /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 433AD3001F2CED1F0003FBCD /* dsa_pub.pem */; };
@@ -63,6 +71,14 @@
 		115BB8A6F00EEB28DD8A96E5 /* Pods-Shifty.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shifty.release.xcconfig"; path = "Pods/Target Support Files/Pods-Shifty/Pods-Shifty.release.xcconfig"; sourceTree = "<group>"; };
 		3B342D431FCCA68900DEDECF /* BrowserRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrowserRule.swift; path = Shifty/BrowserRule.swift; sourceTree = "<group>"; };
 		3B41F12B1FD88C40008D65CB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = main.swift; path = Shifty/main.swift; sourceTree = "<group>"; };
+		3B4873E61FDD971B007ABD88 /* ShiftyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ShiftyState.swift; path = Shifty/ShiftyState.swift; sourceTree = "<group>"; };
+		3B4873E81FDDA02E007ABD88 /* ShiftyPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ShiftyPreferences.swift; path = Shifty/ShiftyPreferences.swift; sourceTree = "<group>"; };
+		3B4873EB1FDDA320007ABD88 /* Rule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rule.swift; sourceTree = "<group>"; };
+		3B4873EE1FDDB601007ABD88 /* AppReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppReducer.swift; path = Shifty/AppReducer.swift; sourceTree = "<group>"; };
+		3B4873F01FDDB728007ABD88 /* PreferencesReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PreferencesReducer.swift; path = Shifty/PreferencesReducer.swift; sourceTree = "<group>"; };
+		3B4873F21FDDB741007ABD88 /* RulesReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RulesReducer.swift; path = Shifty/RulesReducer.swift; sourceTree = "<group>"; };
+		3B4873F41FDDB755007ABD88 /* LocationReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocationReducer.swift; path = Shifty/LocationReducer.swift; sourceTree = "<group>"; };
+		3B4873F61FDDB76C007ABD88 /* InfoReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InfoReducer.swift; path = Shifty/InfoReducer.swift; sourceTree = "<group>"; };
 		43087E171F41EE0700A54523 /* BLNotificationBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BLNotificationBlock.h; path = Shifty/BLNotificationBlock.h; sourceTree = "<group>"; };
 		43087E181F41EE0700A54523 /* BLNotificationBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BLNotificationBlock.m; path = Shifty/BLNotificationBlock.m; sourceTree = "<group>"; };
 		43099BA81FC67B5000A0720B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/CustomTimeWindow.strings"; sourceTree = "<group>"; };
@@ -145,6 +161,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3B4873E51FDD96DD007ABD88 /* States */ = {
+			isa = PBXGroup;
+			children = (
+				3B4873E61FDD971B007ABD88 /* ShiftyState.swift */,
+			);
+			name = States;
+			sourceTree = "<group>";
+		};
+		3B4873EA1FDDA30C007ABD88 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3B4873EB1FDDA320007ABD88 /* Rule.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		3B4873ED1FDDB5A6007ABD88 /* Reducers */ = {
+			isa = PBXGroup;
+			children = (
+				3B4873EE1FDDB601007ABD88 /* AppReducer.swift */,
+				3B4873F01FDDB728007ABD88 /* PreferencesReducer.swift */,
+				3B4873F21FDDB741007ABD88 /* RulesReducer.swift */,
+				3B4873F41FDDB755007ABD88 /* LocationReducer.swift */,
+				3B4873F61FDDB76C007ABD88 /* InfoReducer.swift */,
+			);
+			name = Reducers;
+			sourceTree = "<group>";
+		};
 		433EE8501EBD8ECA007EA870 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -167,6 +211,7 @@
 				43D5C21D1FC2CAC300AF88E0 /* PrefShortcutsViewController.xib */,
 				43B9DE191FB592AE002C4C29 /* PrefAboutViewController.swift */,
 				43D5C2201FC2CACA00AF88E0 /* PrefAboutViewController.xib */,
+				3B4873E81FDDA02E007ABD88 /* ShiftyPreferences.swift */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -224,6 +269,9 @@
 		4394DDA11EBE375300F22908 /* Shifty */ = {
 			isa = PBXGroup;
 			children = (
+				3B4873ED1FDDB5A6007ABD88 /* Reducers */,
+				3B4873EA1FDDA30C007ABD88 /* Models */,
+				3B4873E51FDD96DD007ABD88 /* States */,
 				436A0F3B1FBE911200E77D41 /* Assets */,
 				436A0F391FBE90BF00E77D41 /* Utils */,
 				436A0F3A1FBE90F000E77D41 /* Controllers */,
@@ -459,6 +507,7 @@
 				"${BUILT_PRODUCTS_DIR}/MASPreferences+Shifty/MASPreferences_Shifty.framework",
 				"${BUILT_PRODUCTS_DIR}/MASShortcut/MASShortcut.framework",
 				"${BUILT_PRODUCTS_DIR}/PublicSuffix/PublicSuffix.framework",
+				"${BUILT_PRODUCTS_DIR}/ReSwift/ReSwift.framework",
 				"${PODS_ROOT}/Sparkle/Sparkle.framework",
 				"${PODS_ROOT}/Sparkle/Sparkle.framework.dSYM",
 			);
@@ -468,6 +517,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASPreferences_Shifty.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASShortcut.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PublicSuffix.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sparkle.framework",
 				"${DWARF_DSYM_FOLDER_PATH}/Sparkle.framework.dSYM",
 			);
@@ -542,17 +592,25 @@
 				43B547F11F29A77D0034E779 /* Event.swift in Sources */,
 				4388E8EB1F84AD1A00DC34CC /* EDSunriseSet.m in Sources */,
 				4368E3031EBEBA6C00D53310 /* PrefManager.swift in Sources */,
+				3B4873F11FDDB728007ABD88 /* PreferencesReducer.swift in Sources */,
 				437D7E161EC015CB00544FC8 /* SliderView.swift in Sources */,
 				4351C7811FB5737900788CC9 /* PrefGeneralViewController.swift in Sources */,
 				437D3A411FD7314000303AFE /* AccessibilityPromptWindow.swift in Sources */,
 				43087E191F41EE0700A54523 /* BLNotificationBlock.m in Sources */,
+				3B4873F31FDDB741007ABD88 /* RulesReducer.swift in Sources */,
 				4394DDAD1EBE376F00F22908 /* StatusMenuController.swift in Sources */,
+				3B4873F71FDDB76C007ABD88 /* InfoReducer.swift in Sources */,
 				43B9DE1B1FB592AE002C4C29 /* PrefAboutViewController.swift in Sources */,
+				3B4873F51FDDB755007ABD88 /* LocationReducer.swift in Sources */,
+				3B4873E91FDDA02E007ABD88 /* ShiftyPreferences.swift in Sources */,
 				4388E8E51F84ACCF00DC34CC /* SunriseSetLocationManager.swift in Sources */,
 				3B41F12C1FD88C40008D65CB /* main.swift in Sources */,
+				3B4873E71FDD971B007ABD88 /* ShiftyState.swift in Sources */,
 				4350191D1F21E99F0001324F /* CustomTimeWindow.swift in Sources */,
+				3B4873EF1FDDB601007ABD88 /* AppReducer.swift in Sources */,
 				43B9DE151FB5924F002C4C29 /* PrefShortcutsViewController.swift in Sources */,
 				3B342D441FCCA68900DEDECF /* BrowserRule.swift in Sources */,
+				3B4873EC1FDDA320007ABD88 /* Rule.swift in Sources */,
 				4394DDA91EBE376F00F22908 /* AppDelegate.swift in Sources */,
 				43C039DA1F1BD178009B1B70 /* CBBlueLightClient+Shifty.swift in Sources */,
 			);
