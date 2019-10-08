@@ -5,6 +5,7 @@ public enum AXNotification: String {
     case mainWindowChanged       = "AXMainWindowChanged"
     case focusedWindowChanged    = "AXFocusedWindowChanged"
     case focusedUIElementChanged = "AXFocusedUIElementChanged"
+    case focusedTabChanged       = "AXFocusedTabChanged"
 
     // Application notifications
     case applicationActivated    = "AXApplicationActivated"
@@ -35,6 +36,7 @@ public enum AXNotification: String {
     // dictionary with the key NSAccessibilityUIElementsKey and an array of elements that have been
     // added or changed as a result of this layout change.
     case layoutChanged           = "AXLayoutChanged"
+    case loadComplete           = "AXLoadComplete"
 
     // Misc notifications
     case helpTagCreated          = "AXHelpTagCreated"

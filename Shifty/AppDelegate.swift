@@ -85,11 +85,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         //Show alert if accessibility permissions have been revoked while app is not running
-        if UserDefaults.standard.bool(forKey: Keys.isWebsiteControlEnabled) && !UIElement.isProcessTrusted() {
-            Event.accessibilityRevokedAlertShown.record()
-            logw("Accessibility permissions revoked while app was not running")
-            showAccessibilityDeniedAlert()
-            UserDefaults.standard.set(false, forKey: Keys.isWebsiteControlEnabled)
+        if UserDefaults.standard.bool(forKey: Keys.isWebsiteControlEnabled) {
+            if !UIElement.isProcessTrusted() {
+                Event.accessibilityRevokedAlertShown.record()
+                logw("Accessibility permissions revoked while app was not running")
+                showAccessibilityDeniedAlert()
+                UserDefaults.standard.set(false, forKey: Keys.isWebsiteControlEnabled)
+            } else {
+                UIElement.globalMessagingTimeout = 1.0;
+            }
         }
         
         observeAccessibilityApiNotifications()
@@ -187,6 +191,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                 if UIElement.isProcessTrusted(withPrompt: false) {
                     UserDefaults.standard.set(true, forKey: Keys.isWebsiteControlEnabled)
+                    UIElement.globalMessagingTimeout = 1.0;
                 } else {
                     UserDefaults.standard.set(false, forKey: Keys.isWebsiteControlEnabled)
                 }
